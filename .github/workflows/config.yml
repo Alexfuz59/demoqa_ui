@@ -1,0 +1,183 @@
+name: UI-tests demoqa
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: Choose target
+        required: true
+        default: Run tests Chrome
+        type: choice
+        options:
+          - Run tests Chrome
+          - Run tests Firefox
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Chrome
+        if: "github.event.inputs.deployment_target == 'Run tests Chrome'"
+        run: sudo apt-get install google-chrome-stable
+
+      - name: Install Firefox
+        if: "github.event.inputs.deployment_target == 'Run tests Firefox'"
+        run: sudo apt-get install firefox
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests Chrome
+        if: "github.event.inputs.deployment_target == 'Run tests Chrome'"
+        run: pytest -s -v --browser_name=chrome --alluredir=allure-results
+        continue-on-error: true
+
+      - name: Run tests Mozilla Firefox
+        if: "github.event.inputs.deployment_target == 'Run tests Firefox'"
+        run: pytest -s -v --browser_name=firefox --alluredir=allure-results
+        continue-on-error: true
+
+      - name: Add environment in allure-results
+        run: |
+          sudo pwd
+          sudo cp -R environment.properties allure-results
+
+      - name: Store allure-results
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+          retention-days: 1
+
+
+  generate-report-Chrome:
+    needs: tests
+    if: "github.event.inputs.deployment_target == 'Run tests Chrome'"
+    runs-on: ubuntu-latest
+    name: Generate-report Chrome
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Checkout repository to GitHub runner
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+          path: ./.github/gh-pages
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
+
+      - name: Allure report installation
+        run: sudo wget https://github.com/allure-framework/allure2/releases/download/2.23.1/allure-2.23.1.tgz && sudo tar -zxvf allure-2.23.1.tgz -C /opt/ && sudo ln -s /opt/allure-2.23.1/bin/allure /usr/bin/allure
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Generate Allure report
+        run: allure generate allure-results --clean -o allure-report
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          token: ${{ secrets.CI_TOKEN }}
+          branch: gh-pages
+          folder: allure-report
+          clean-exclude: |
+            allure-report-history-chrome
+            allure-report-history-firefox
+          clean: true
+
+      - name: Send message to bot(success)
+        if: ${{ needs.test.outputs.tests_passed == 'true' }}
+        env:
+          CHAT_IDS: ${{ secrets.CHAT_IDS }}
+        run: |
+          IFS=',' read -ra IDS <<< "$CHAT_IDS"
+          for ID in "${IDS[@]}"; do
+            curl -s -X POST https://api.telegram.org/bot${{ secrets.TOKEN_TG }}/sendMessage -F chat_id=$ID -F text='✅Tests UI Demoqa PASSED. 🌐Browser: Chrome. Report: https://alexfuz59.github.io/demoqa_ui/ '
+          done
+        continue-on-error: true
+
+      - name: Send message to bot(failure)
+        if: ${{ needs.test.outputs.tests_passed != 'true' }}
+        env:
+          CHAT_IDS: ${{ secrets.CHAT_IDS }}
+        run: |
+          IFS=',' read -ra IDS <<< "$CHAT_IDS"
+          for ID in "${IDS[@]}"; do
+            curl -s -X POST https://api.telegram.org/bot${{ secrets.TOKEN_TG }}/sendMessage -F chat_id=$ID -F text='🆘Tests UI Demoqa FAILED. 🌐Browser: Chrome. Report: https://alexfuz59.github.io/demoqa_ui/ '
+          done
+        continue-on-error: true
+
+
+  generate-report-Firefox:
+    needs: tests
+    if: "github.event.inputs.deployment_target == 'Run tests Firefox'"
+    runs-on: ubuntu-latest
+    name: Generate-report Firefox
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Checkout repository to GitHub runner
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+          path: ./.github/gh-pages
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
+
+      - name: Allure report installation
+        run: sudo wget https://github.com/allure-framework/allure2/releases/download/2.23.1/allure-2.23.1.tgz && sudo tar -zxvf allure-2.23.1.tgz -C /opt/ && sudo ln -s /opt/allure-2.23.1/bin/allure /usr/bin/allure
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Generate Allure report
+        run: allure generate allure-results --clean -o allure-report
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          token: ${{ secrets.CI_TOKEN }}
+          branch: gh-pages
+          folder: allure-report
+          clean-exclude: |
+            allure-report-history-chrome
+            allure-report-history-firefox
+          clean: true
+
+      - name: Send message to bot(success)
+        if: ${{ needs.test.outputs.tests_passed == 'true' }}
+        env:
+          CHAT_IDS: ${{ secrets.CHAT_IDS }}
+        run: |
+          IFS=',' read -ra IDS <<< "$CHAT_IDS"
+          for ID in "${IDS[@]}"; do
+            curl -s -X POST https://api.telegram.org/bot${{ secrets.TOKEN_TG }}/sendMessage -F chat_id=$ID -F text='✅Tests UI Demoqa PASSED. 🌐Browser: Firefox. Report:https://alexfuz59.github.io/demoqa_ui/ '
+          done
+        continue-on-error: true
+
+      - name: Send message to bot(failure)
+        if: ${{ needs.test.outputs.tests_passed != 'true' }}
+        env:
+          CHAT_IDS: ${{ secrets.CHAT_IDS }}
+        run: |
+          IFS=',' read -ra IDS <<< "$CHAT_IDS"
+          for ID in "${IDS[@]}"; do
+            curl -s -X POST https://api.telegram.org/bot${{ secrets.TOKEN_TG }}/sendMessage -F chat_id=$ID -F text='🆘Tests UI Demoqa FAILED. 🌐Browser: Firefox. Report:https://alexfuz59.github.io/demoqa_ui/ '
+          done
+        continue-on-error: true
