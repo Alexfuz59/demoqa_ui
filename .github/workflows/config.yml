@@ -84,8 +84,17 @@ jobs:
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v4
 
+      - name: Copy history from gh-pages to allure-results
+        run: |
+          sudo mkdir -p allure-results/history  
+          sudo cp -R ./.github/gh-pages/allure-report-history-chrome/history/* allure-results/history/
+
       - name: Generate Allure report
         run: allure generate allure-results --clean -o allure-report
+
+      - name: Update Allure history
+        run: |
+          sudo cp -R allure-report/history/* ./.github/gh-pages/allure-report-history-chrome/history/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
