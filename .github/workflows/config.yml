@@ -111,7 +111,7 @@ jobs:
         run: |
           IFS=',' read -ra IDS <<< "$CHAT_IDS"
           for ID in "${IDS[@]}"; do
-            curl -s -X POST https://api.telegram.org/bot${{ secrets.TOKEN_TG }}/sendMessage -F chat_id=$ID -F text='✅Tests UI Demoqa PASSED. 🌐Browser: Chrome. Report: https://alexfuz59.github.io/demoqa_ui/ '
+            curl -s -X POST https://api.telegram.org/bot${{ secrets.TOKEN_TG }}/sendMessage -F chat_id=$ID -F text='✅Tests UI Demoqa PASSED. 🌐Browser: Chrome. Report: https://demoqa-chrome.netlify.app/ '
           done
         continue-on-error: true
 
@@ -122,7 +122,7 @@ jobs:
         run: |
           IFS=',' read -ra IDS <<< "$CHAT_IDS"
           for ID in "${IDS[@]}"; do
-            curl -s -X POST https://api.telegram.org/bot${{ secrets.TOKEN_TG }}/sendMessage -F chat_id=$ID -F text='🆘Tests UI Demoqa FAILED. 🌐Browser: Chrome. Report: https://alexfuz59.github.io/demoqa_ui/ '
+            curl -s -X POST https://api.telegram.org/bot${{ secrets.TOKEN_TG }}/sendMessage -F chat_id=$ID -F text='🆘Tests UI Demoqa FAILED. 🌐Browser: Chrome. Report: https://demoqa-chrome.netlify.app/ '
           done
         continue-on-error: true
 
@@ -179,7 +179,7 @@ jobs:
         run: |
           IFS=',' read -ra IDS <<< "$CHAT_IDS"
           for ID in "${IDS[@]}"; do
-            curl -s -X POST https://api.telegram.org/bot${{ secrets.TOKEN_TG }}/sendMessage -F chat_id=$ID -F text='✅Tests UI Demoqa PASSED. 🌐Browser: Firefox. Report:https://alexfuz59.github.io/demoqa_ui/ '
+            curl -s -X POST https://api.telegram.org/bot${{ secrets.TOKEN_TG }}/sendMessage -F chat_id=$ID -F text='✅Tests UI Demoqa PASSED. 🌐Browser: Firefox. Report: https://demoqa-firefox.netlify.app/ '
           done
         continue-on-error: true
 
@@ -190,6 +190,6 @@ jobs:
         run: |
           IFS=',' read -ra IDS <<< "$CHAT_IDS"
           for ID in "${IDS[@]}"; do
-            curl -s -X POST https://api.telegram.org/bot${{ secrets.TOKEN_TG }}/sendMessage -F chat_id=$ID -F text='🆘Tests UI Demoqa FAILED. 🌐Browser: Firefox. Report:https://alexfuz59.github.io/demoqa_ui/ '
+            curl -s -X POST https://api.telegram.org/bot${{ secrets.TOKEN_TG }}/sendMessage -F chat_id=$ID -F text='🆘Tests UI Demoqa FAILED. 🌐Browser: Firefox. Report: https://demoqa-firefox.netlify.app/ '
           done
         continue-on-error: true
