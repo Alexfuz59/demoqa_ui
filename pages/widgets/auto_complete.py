@@ -3,6 +3,7 @@ from base.base_page import BasePage
 from config.links import LinkWidgets
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import Keys
+from enums.error_enums import ErrorWidgets
 
 
 class AutoComplete(BasePage):
@@ -26,7 +27,7 @@ class AutoComplete(BasePage):
     @allure.step("Multiselect empty check")
     def check_multiple_empty(self):
         total = len(self.color_in_multiple())
-        assert total == 0, 'Multiselect is not empty'
+        assert total == 0, ErrorWidgets.ERROR_MULTISELECT_EMPTY
 
     @allure.step("Set values in Multiselect")
     def input_in_multiple(self):
@@ -36,7 +37,7 @@ class AutoComplete(BasePage):
             multiple.send_keys(Keys.ENTER)
             self.wait.until(EC.visibility_of_element_located(self.COLOR_IN_MULTIPLE(color)))
             selected_color = self.color_in_multiple()
-            assert color in selected_color, f'Value {color} is not selected in Multiselect'
+            assert color in selected_color, ErrorWidgets.ERROR_MULTISELECT_VALUE(color)
 
     @allure.step("Delete value in Multiselect")
     def delete_selected_multiple(self):
@@ -53,5 +54,5 @@ class AutoComplete(BasePage):
             input.send_keys(Keys.ENTER)
             input.click()
             selected = self.wait.until(EC.visibility_of_element_located(self.SELECTED_INPUT_SINGLE_COLOR)).text
-            assert color == selected, f'Value {color} is not selected in Multiselect single color'
+            assert color == selected, ErrorWidgets.ERROR_MULTISELECT_SINGLE(color)
 

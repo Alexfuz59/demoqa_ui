@@ -2,6 +2,7 @@ import allure
 from base.base_page import BasePage
 from config.links import LinksElement
 from selenium.webdriver.support import expected_conditions as EC
+from enums.error_enums import ErrorElements
 
 
 class Buttons(BasePage):
@@ -20,8 +21,9 @@ class Buttons(BasePage):
 
     @allure.step("Checking double click")
     def check_double_click(self):
-        text_double_click = self.wait.until(EC.visibility_of_element_located(self.CHECK_DOUBLE_CLICK)).text
-        assert text_double_click == 'You have done a double click', 'Double-click button broken'
+        text_double_click = self.wait\
+            .until(EC.visibility_of_element_located(self.CHECK_DOUBLE_CLICK)).text
+        assert text_double_click == 'You have done a double click', ErrorElements.ERROR_DOUBLE_CLICK
 
     @allure.step("Right button click")
     def right_button_click(self):
@@ -30,8 +32,9 @@ class Buttons(BasePage):
 
     @allure.step("Checking right click")
     def check_right_click(self):
-        text_right_click = self.wait.until(EC.visibility_of_element_located(self.CHECK_RIGHT_CLICK)).text
-        assert text_right_click == 'You have done a right click', 'Right click button broken'
+        text_right_click = self.wait\
+            .until(EC.visibility_of_element_located(self.CHECK_RIGHT_CLICK)).text
+        assert text_right_click == 'You have done a right click', ErrorElements.ERROR_RIGHT_CLICK
 
     @allure.step("Click a button with dynamic attributes")
     def dynamic_button_click(self):
@@ -39,8 +42,9 @@ class Buttons(BasePage):
 
     @allure.step("Checking button with dynamic attributes")
     def check_dynamic_click(self):
-        text_dynamic_click = self.wait.until(EC.visibility_of_element_located(self.CHECK_CLICK_ME_BUTTON)).text
-        assert text_dynamic_click == 'You have done a dynamic click', 'Dynamic button broken'
+        text_dynamic_click = self.wait\
+            .until(EC.visibility_of_element_located(self.CHECK_CLICK_ME_BUTTON)).text
+        assert text_dynamic_click == 'You have done a dynamic click', ErrorElements.ERROR_DYNAMIC_BUTTON
 
 
 

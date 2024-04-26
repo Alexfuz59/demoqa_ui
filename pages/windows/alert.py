@@ -1,6 +1,7 @@
 import allure
 from base.base_page import BasePage
 from config.links import LinkWindows
+from enums.error_enums import ErrorWindows
 from selenium.webdriver.support import expected_conditions as EC
 
 
@@ -35,14 +36,14 @@ class Alert(BasePage):
         alert = self.wait.until(EC.alert_is_present())
         alert_message = alert.text
         alert.accept()
-        assert alert_message in "You clicked a button", f'Invalid message in the alerts, message: {alert_message}'
+        assert alert_message in "You clicked a button", ErrorWindows.ERROR_MESSAGE_ALERT(alert_message)
 
     @allure.step("Checking alert time")
     def check_alert_time(self):
         alert = self.wait.until(EC.alert_is_present())
         alert_message = alert.text
         alert.accept()
-        assert alert_message in "This alert appeared after 5 seconds", f'Invalid message in the alerts, message: {alert_message}'
+        assert alert_message in "This alert appeared after 5 seconds", ErrorWindows.ERROR_MESSAGE_ALERT(alert_message)
 
     @allure.step("Checking alert confirme")
     def check_alert_confirme(self):
@@ -50,8 +51,8 @@ class Alert(BasePage):
         alert_message = alert.text
         alert.accept()
         result_alert = self.wait.until(EC.visibility_of_element_located(self.RESULT_ALERT_CONFIRM)).text
-        assert alert_message in "Do you confirm action?", f'Invalid message in the alerts, message: {alert_message}'
-        assert result_alert == "You selected Ok", 'Incorrect result of the alerts'
+        assert alert_message in "Do you confirm action?", ErrorWindows.ERROR_MESSAGE_ALERT(alert_message)
+        assert result_alert == "You selected Ok", ErrorWindows.ERROR_ALERT_RESULT
 
     @allure.step("Checking alert promt")
     def check_alert_promt(self):
@@ -61,5 +62,5 @@ class Alert(BasePage):
         alert.send_keys(name)
         alert.accept()
         result_alert = self.wait.until(EC.visibility_of_element_located(self.RESULT_ALERT_PROMT)).text
-        assert alert_message in "Please enter your name", f'Invalid message in the alerts, message: {alert_message}'
-        assert result_alert == f'You entered {name}', f'Invalid value:{name} entered the alerts:{result_alert}'
+        assert alert_message in "Please enter your name", ErrorWindows.ERROR_MESSAGE_ALERT(alert_message)
+        assert result_alert == f'You entered {name}', ErrorWindows.ERROR_ALERT_VALUE(name, result_alert)

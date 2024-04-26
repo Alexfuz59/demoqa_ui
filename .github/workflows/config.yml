@@ -84,17 +84,10 @@ jobs:
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v4
 
-      - name: Copy history from gh-pages to allure-results
-        run: |
-          sudo mkdir -p allure-results/history  
-          sudo cp -R ./.github/gh-pages/allure-report-history-chrome/history/* allure-results/history/
 
       - name: Generate Allure report
         run: allure generate allure-results --clean -o allure-report
 
-      - name: Update Allure history
-        run: |
-          sudo cp -R allure-report/history/* ./.github/gh-pages/allure-report-history-chrome/history/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
@@ -102,9 +95,6 @@ jobs:
           token: ${{ secrets.CI_TOKEN }}
           branch: gh-pages
           folder: allure-report
-          clean-exclude: |
-            allure-report-history-chrome
-            allure-report-history-firefox
           clean: true
 
       - name: Send message to bot(success)
@@ -141,8 +131,8 @@ jobs:
       - name: Checkout repository to GitHub runner
         uses: actions/checkout@v3
         with:
-          ref: gh-pages
-          path: ./.github/gh-pages
+          ref: gh-pages-firefox
+          path: ./.github/gh-pages-firefox
 
       - uses: actions/setup-java@v3
         with:
@@ -155,27 +145,15 @@ jobs:
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v4
 
-      - name: Copy history from gh-pages to allure-results
-        run: |
-          sudo mkdir -p allure-results/history  
-          sudo cp -R ./.github/gh-pages/allure-report-history-firefox/history/* allure-results/history/
-
       - name: Generate Allure report
         run: allure generate allure-results --clean -o allure-report
-
-      - name: Update Allure history
-        run: |
-          sudo cp -R allure-report/history/* ./.github/gh-pages/allure-report-history-firefox/history/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
           token: ${{ secrets.CI_TOKEN }}
-          branch: gh-pages
+          branch: gh-pages-firefox
           folder: allure-report
-          clean-exclude: |
-            allure-report-history-chrome
-            allure-report-history-firefox
           clean: true
 
       - name: Send message to bot(success)

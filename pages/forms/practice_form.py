@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from faker import Faker
 from selenium.webdriver import Keys
 from random import choice, randint
+from enums.error_enums import ErrorForm
 
 fake = Faker()
 
@@ -64,19 +65,23 @@ class PracticeForm(BasePage):
 
     @allure.step("Set first name")
     def set_first_name(self):
-        self.wait.until(EC.visibility_of_element_located(self.INPUT_FIRST_NAME)).send_keys(self.first_name)
+        self.wait.until(EC.visibility_of_element_located(self.INPUT_FIRST_NAME))\
+            .send_keys(self.first_name)
 
     @allure.step("Set last name")
     def set_last_name(self):
-        self.wait.until(EC.visibility_of_element_located(self.INPUT_LAST_NAME)).send_keys(self.last_name)
+        self.wait.until(EC.visibility_of_element_located(self.INPUT_LAST_NAME))\
+            .send_keys(self.last_name)
 
     @allure.step("Set email")
     def set_user_email(self):
-        self.wait.until(EC.visibility_of_element_located(self.INPUT_USER_EMAIL)).send_keys(self.user_email)
+        self.wait.until(EC.visibility_of_element_located(self.INPUT_USER_EMAIL))\
+            .send_keys(self.user_email)
 
     @allure.step("Set phone number")
     def set_user_number(self):
-        self.wait.until(EC.visibility_of_element_located(self.INPUT_USER_NUMBER)).send_keys(self.phone_number)
+        self.wait.until(EC.visibility_of_element_located(self.INPUT_USER_NUMBER))\
+            .send_keys(self.phone_number)
 
     @allure.step("Set birthdate")
     def set_date_birth(self):
@@ -163,12 +168,13 @@ class PracticeForm(BasePage):
 
     @allure.step("Upload file")
     def upload_file(self):
-        self.wait.until(EC.visibility_of_element_located(self.SELECT_PICTURE)).send_keys(self.FILE_PATH)
+        self.wait.until(EC.visibility_of_element_located(self.SELECT_PICTURE))\
+            .send_keys(self.FILE_PATH)
 
     @allure.step("Checking active submitted form")
     def check_active_submitted_form(self):
         submitted_form = self.wait.until(EC.visibility_of_element_located(self.SUBMITTED_FORM))
-        assert submitted_form.is_displayed(), 'Submitted form did not open'
+        assert submitted_form.is_displayed(), ErrorForm.ERROR_OPEN_FORM
 
     @allure.step("Checking inactive submitted form")
     def check_no_active_submitted_form(self):
@@ -179,14 +185,14 @@ class PracticeForm(BasePage):
         subjects = self.wait.until(EC.visibility_of_element_located(self.SUBJECTS)).text
         subjects_list = subjects.split(',')
         for subject in subjects_list:
-            assert subject.strip() in self.subjects_list, f'Wrong subjects: {subject}'
+            assert subject.strip() in self.subjects_list, ErrorForm.ERROR_SUBJECTS(subject)
 
     @allure.step("Checking hobbies in submitted form")
     def check_hobbies_submitted_form(self):
         hobbies = self.wait.until(EC.visibility_of_element_located(self.HOBBIES)).text
         hobbies_list = hobbies.split(", ")
         for hobby in hobbies_list:
-            assert hobby in self.hobbies_list, f'Wrong hobbies: {hobby}'
+            assert hobby in self.hobbies_list, ErrorForm.ERROR_HOBBIES(hobby)
 
     @allure.step("Checking state and city in submitted form")
     def check_state_city(self):
@@ -197,45 +203,46 @@ class PracticeForm(BasePage):
             assert state_city_list[-1] in self.city_list[state]
         else:
             raise AssertionError("Wrong city")
-        assert state_city_list[0] in self.state_list, f'Wrong state:{state_city_list[-1]} and city:{state_city_list[0]}'
+        assert state_city_list[0] in self.state_list,\
+            ErrorForm.ERROR_CITY_STATE(state_city_list[-1], state_city_list[0])
 
     @allure.step("Checking student name in submitted form")
     def check_student_name(self):
         student_name = self.wait.until(EC.visibility_of_element_located(self.STUDENT_NAME)).text
-        assert self.first_name in student_name, f'Wrong first_name: {student_name}'
-        assert self.last_name in student_name, f'Wrong last_name: {student_name}'
+        assert self.first_name in student_name, ErrorForm.ERROR_FIRST_NAME(student_name)
+        assert self.last_name in student_name, ErrorForm.ERROR_LAST_NAME(student_name)
 
     @allure.step("Checking email in submitted form")
     def check_student_email(self):
         student_email = self.wait.until(EC.visibility_of_element_located(self.STUDENT_EMAIL)).text
-        assert self.user_email == student_email, f'Wrong user email: {student_email}'
+        assert self.user_email == student_email, ErrorForm.ERROR_STUDENT_EMAIL(student_email)
 
     @allure.step("Checking gender in submitted form")
     def check_gender(self):
         gender = self.wait.until(EC.visibility_of_element_located(self.GENDER)).text
-        assert gender in self.gender_list, f'Wrong gender: {gender}'
+        assert gender in self.gender_list, ErrorForm.ERROR_GENDER(gender)
 
     @allure.step("Checking number mobile in submitted form")
     def check_mobile(self):
         mobile = self.wait.until(EC.visibility_of_element_located(self.MOBILE)).text
-        assert self.phone_number == int(mobile), f'Wrong phone number: {mobile}'
+        assert self.phone_number == int(mobile), ErrorForm.ERROR_MOBILE(mobile)
 
     @allure.step("Checking picture in submitted form")
     def check_picture(self):
         picture = self.wait.until(EC.visibility_of_element_located(self.PICTURE)).text
-        assert picture in self.FILE_PATH, f'Wrong picture'
+        assert picture in self.FILE_PATH, ErrorForm.ERROR_PICTURE
 
     @allure.step("Checking birthday in submitted form")
     def check_birthday(self):
         birthday_str = self.wait.until(EC.visibility_of_element_located(self.BIRTHDAY)).text
         birthday = datetime.strptime(birthday_str, "%d %B,%Y")
         birthday_format = birthday.strftime("%m.%d.%Y")
-        assert birthday_format == self.date_birth, f'Wrong birthday: {birthday_format}'
+        assert birthday_format == self.date_birth, ErrorForm.ERROR_BIRTHDAY
 
     @allure.step("Checking address in submitted form")
     def check_address(self):
         address = self.wait.until(EC.visibility_of_element_located(self.ADDRESS)).text
-        assert address.strip() == self.current_address.replace('\n', " ").strip(), f'Wrong birthday: {address}'
+        assert address.strip() == self.current_address.replace('\n', " ").strip(), ErrorForm.ERROR_ADDRESS(address)
 
     @allure.step("Click button close")
     def click_button_close(self):

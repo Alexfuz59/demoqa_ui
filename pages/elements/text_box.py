@@ -2,6 +2,7 @@ import allure
 from base.base_page import BasePage
 from config.links import LinksElement
 from selenium.webdriver.support import expected_conditions as EC
+from enums.error_enums import ErrorElements
 
 
 class TextBox(BasePage):
@@ -25,7 +26,7 @@ class TextBox(BasePage):
         for key, value in placeholders.items():
             input = self.wait.until(EC.presence_of_element_located(key))
             placeholder = input.get_attribute('placeholder')
-            assert value == placeholder, f'Invalid placeholder: {value}'
+            assert value == placeholder, ErrorElements.INVALID_PLACEHOLDER(value)
 
     @allure.step("Set value in input user name")
     def set_value_user_name(self):
@@ -34,7 +35,7 @@ class TextBox(BasePage):
         input.send_keys(value)
         self.click_button_submit()
         value_input = self.wait.until(EC.presence_of_element_located(self.DISPLAY_USER_NAME)).text
-        assert value in value_input, 'Invalid user name'
+        assert value in value_input, ErrorElements.INVALID_NAME
 
     @allure.step("Set value in input current address")
     def set_value_current_address(self):
@@ -46,7 +47,7 @@ class TextBox(BasePage):
         value_input = self.wait.until(EC.presence_of_element_located(self.DISPLAY_CURRENT_ADDRESS)).text
         value = value.replace('\n', " ").strip()
         value_input = value_input.replace('Current Address :', " ").strip()
-        assert value == value_input, 'Invalid current address'
+        assert value == value_input, ErrorElements.INVALID_ADDRESS
 
     @allure.step("Set value in input permanent address(")
     def set_value_permanent_address(self):
@@ -57,7 +58,7 @@ class TextBox(BasePage):
         value_input = self.wait.until(EC.presence_of_element_located(self.DISPLAY_PERMANENT_ADDRESS)).text
         value = value.replace('\n', " ").strip()
         value_input = value_input.replace('Permananet Address :', " ").strip()
-        assert value == value_input, 'Invalid permanent address'
+        assert value == value_input, ErrorElements.INVALID_ADDRESS
 
     @allure.step("Set value in input user email")
     def set_value_user_email(self):
@@ -66,7 +67,7 @@ class TextBox(BasePage):
         input.send_keys(value)
         self.click_button_submit()
         value_input = self.wait.until(EC.presence_of_element_located(self.DISPLAY_USER_EMAIL)).text
-        assert value in value_input, 'Invalid user email'
+        assert value in value_input, ErrorElements.INVALID_EMAIL
 
     @allure.step("Click button submit")
     def click_button_submit(self):

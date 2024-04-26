@@ -2,6 +2,7 @@ import re
 import allure
 from base.base_page import BasePage
 from config.links import LinkInteractions
+from enums.error_enums import ErrorInter
 from selenium.webdriver.support import expected_conditions as EC
 
 
@@ -39,8 +40,8 @@ class Dragabble(BasePage):
         drag = self.wait.until(EC.visibility_of_element_located(self.DRAG_SIMPLE))
         self.action.drag_and_drop_by_offset(drag, left, top).pause(2).perform()
         top_after, left_after = self.check_position_simple()
-        assert top_before + top == top_after, f'Invalid height:{top_after}'
-        assert left_before + left == left_after, f'Invalid width: {left_after}'
+        assert top_before + top == top_after, ErrorInter.INVALID_HEIGHT(top_after)
+        assert left_before + left == left_after, ErrorInter.INVALID_WIDTH(left_after)
 
     @allure.step("Position determination simple")
     def check_position_simple(self):
@@ -58,8 +59,8 @@ class Dragabble(BasePage):
         self.action.drag_and_drop_by_offset(drag, left, top).perform()
         drag = self.wait.until(EC.visibility_of_element_located(self.DRAG_ONLY_X))
         top_after, left_after = self.check_position(drag)
-        assert top_after == 0, f'Invalid height:{top_after}'
-        assert left_after == left_before + left, f'Invalid width: {left_after}'
+        assert top_after == 0, ErrorInter.INVALID_HEIGHT(top_after)
+        assert left_after == left_before + left, ErrorInter.INVALID_WIDTH(left_after)
 
     @allure.step("Position determination")
     def check_position(self, drag):
@@ -76,8 +77,8 @@ class Dragabble(BasePage):
         self.action.drag_and_drop_by_offset(drag, left, top).perform()
         drag = self.wait.until(EC.visibility_of_element_located(self.DRAG_ONLY_Y))
         top_after, left_after = self.check_position(drag)
-        assert left_after == 0, f'Invalid width: {left_after}'
-        assert top_after == top_before + top, f'Invalid height:{top_after}'
+        assert left_after == 0, ErrorInter.INVALID_WIDTH(left_after)
+        assert top_after == top_before + top, ErrorInter.INVALID_HEIGHT(top_after)
 
     @allure.step("Checking container restriction")
     def check_container_restriction(self, top, left):
@@ -88,15 +89,15 @@ class Dragabble(BasePage):
         top_after, left_after = self.check_position(drag)
         top_container, left_container = self.size_container()
         if top_before + top > top_container and left_before + left > left_container:
-            assert top_after <= top_container, f'Height {top_after} is greater than the height {top_container} of the container'
-            assert left_after <= left_container, f'Width {left_after} is greater than the width {left_container} of the container'
+            assert top_after <= top_container, ErrorInter.ERROR_HEIGHT_CONTAINER(top_after, top_container)
+            assert left_after <= left_container, ErrorInter.ERROR_WIDTH_CONTAINER(left_after, top_container)
         elif top_before + top > top_container:
-            assert top_after <= top_container, f'Height {top_after} is greater than the height {top_container} of the container'
+            assert top_after <= top_container, ErrorInter.ERROR_HEIGHT_CONTAINER(top_after, top_container)
         elif left_before + left > left_container:
-            assert left_after <= left_container, f'Width {left_after} is greater than the width {left_container} of the container'
+            assert left_after <= left_container, ErrorInter.ERROR_WIDTH_CONTAINER(left_after, top_container)
         else:
-            assert top_before + top == top_after, f'Invalid height:{top_after}'
-            assert left_before + left == left_after, f'Invalid width: {left_after}'
+            assert top_before + top == top_after, ErrorInter.INVALID_HEIGHT(top_after)
+            assert left_before + left == left_after, ErrorInter.INVALID_WIDTH(left_after)
 
     @allure.step("Size container ")
     def size_container(self):

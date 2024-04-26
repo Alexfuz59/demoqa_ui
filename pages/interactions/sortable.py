@@ -1,6 +1,7 @@
 import allure
 from base.base_page import BasePage
 from config.links import LinkInteractions
+from enums.error_enums import ErrorInter
 from selenium.webdriver.support import expected_conditions as EC
 
 
@@ -42,7 +43,7 @@ class Sortable(BasePage):
     @allure.step("Checking sorting desc")
     def check_sort(self, after_value, before_value):
         for i in range(0, len(after_value)-1):
-            assert after_value[i] == before_value[-i-1], 'Incorrect descending sorting'
+            assert after_value[i] == before_value[-i-1], ErrorInter.ERROR_SORTING_DESC
 
     @allure.step("Drag and drop value in the grid in descending order")
     def moving_grid_desc(self):

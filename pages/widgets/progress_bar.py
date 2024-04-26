@@ -3,6 +3,7 @@ import time
 from base.base_page import BasePage
 from config.links import LinkWidgets
 from selenium.webdriver.support import expected_conditions as EC
+from enums.error_enums import ErrorWidgets
 
 
 class ProgressBar(BasePage):
@@ -33,7 +34,7 @@ class ProgressBar(BasePage):
         self.wait.until(EC.visibility_of_element_located(self.BUTTON_STOP))
         time.sleep(2)
         value_start = int(progress_bar.get_attribute("aria-valuenow"))
-        assert value_progress_bar != value_start, 'The progress bar did not start'
+        assert value_progress_bar != value_start, ErrorWidgets.ERROR_PROGRESS_BAR_START
 
     @allure.step("Stop progress bar")
     def check_stop(self):
@@ -44,7 +45,7 @@ class ProgressBar(BasePage):
         value = int(progress_bar.get_attribute("aria-valuenow"))
         time.sleep(2)
         before_value = int(progress_bar.get_attribute("aria-valuenow"))
-        assert value == before_value, 'Progress bar loading has not stopped'
+        assert value == before_value, ErrorWidgets.ERROR_PROGRESS_BAR_STOP
 
     @allure.step("Reset progress bar")
     def check_reset(self):
@@ -56,7 +57,7 @@ class ProgressBar(BasePage):
         self.click_button_reset()
         self.wait.until(EC.visibility_of_element_located(self.BUTTON_START))
         after_value = int(progress_bar.get_attribute("aria-valuenow"))
-        assert before_value == 100, 'Progress bar did not load all the way'
-        assert after_value == 0, 'Progress bar did not update to 0'
+        assert before_value == 100, ErrorWidgets.ERROR_PROGRESS_BAR_RESTART
+        assert after_value == 0, ErrorWidgets.ERROR_PROGRESS_BAR_VALUE0
 
 

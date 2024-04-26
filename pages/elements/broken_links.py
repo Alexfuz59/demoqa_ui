@@ -3,6 +3,7 @@ import requests
 from base.base_page import BasePage
 from config.links import LinksElement
 from selenium.webdriver.support import expected_conditions as EC
+from enums.error_enums import ErrorElements
 from PIL import Image, UnidentifiedImageError
 from io import BytesIO
 
@@ -21,10 +22,10 @@ class BrokenLinks(BasePage):
         response = requests.get(src)
         if response.status_code == 200:
             image = Image.open(BytesIO(response.content))
-            assert image.size[0] == 347 and image.size[1] == 100, 'Incorrect image size'
-            assert imageSite.is_displayed(), 'Image not displayed on the page'
+            assert image.size[0] == 347 and image.size[1] == 100, ErrorElements.ERROR_IMAGE_SIZE
+            assert imageSite.is_displayed(), ErrorElements.ERROR_IMAGE_NOT_DISPLAYED
         else:
-            raise AssertionError("Image Error")
+            raise AssertionError(ErrorElements.ERROR_IMAGE)
 
     @allure.step("Checking the broken image")
     def check_broken_image(self):
@@ -34,12 +35,12 @@ class BrokenLinks(BasePage):
         try:
             if response.status_code == 200:
                 image = Image.open(BytesIO(response.content))
-                assert imageSite.is_displayed(), 'Image not displayed on the page'
-                assert image.size[0] > 16 and image.size[1] > 16, 'Incorrect image size'
+                assert imageSite.is_displayed(), ErrorElements.ERROR_IMAGE_NOT_DISPLAYED
+                assert image.size[0] > 16 and image.size[1] > 16, ErrorElements.ERROR_IMAGE_SIZE
             else:
-                raise AssertionError("Image Error")
+                raise AssertionError(ErrorElements.ERROR_IMAGE)
         except UnidentifiedImageError:
-            raise AssertionError("Favicon, image failed to load")
+            raise AssertionError(ErrorElements.ERROR_FAVICON)
 
     @allure.step("Checking the valid link")
     def click_valid_link(self):

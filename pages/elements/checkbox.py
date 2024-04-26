@@ -2,6 +2,7 @@ import allure
 from base.base_page import BasePage
 from config.links import LinksElement
 from selenium.webdriver.support import expected_conditions as EC
+from enums.error_enums import ErrorElements
 
 
 class Checkbox(BasePage):
@@ -23,7 +24,7 @@ class Checkbox(BasePage):
     def check_all_checkbox(self):
         for i in range(1, 10):
             checkbox = self.wait.until(EC.presence_of_element_located(self.CHECKBOX_STATUS(i)))
-            assert checkbox.is_selected(), f'Checkbox {i} not selected'
+            assert checkbox.is_selected(), ErrorElements.ERROR_CHECKBOX_SELECTED(i)
 
 
 

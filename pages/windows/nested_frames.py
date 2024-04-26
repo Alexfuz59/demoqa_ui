@@ -2,6 +2,7 @@ import allure
 from base.base_page import BasePage
 from config.links import LinkWindows
 from selenium.webdriver.support import expected_conditions as EC
+from enums.error_enums import ErrorWindows
 
 
 class NestedFrames(BasePage):
@@ -19,5 +20,5 @@ class NestedFrames(BasePage):
         frame_children = self.wait.until(EC.visibility_of_element_located(self.TEXT_FRAME_CHILDREN)).text
         self.driver.switch_to.default_content()
         self.driver.switch_to.default_content()
-        assert frame_father == "Parent frame", 'Invalid children frame'
-        assert frame_children == "Child Iframe", 'Invalid father frame'
+        assert frame_father == "Parent frame", ErrorWindows.ERROR_FRAME
+        assert frame_children == "Child Iframe", ErrorWindows.ERROR_FRAME

@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 import allure
 from base.base_page import BasePage
 from config.links import LinksElement
+from enums.error_enums import ErrorElements
 from selenium.webdriver.support import expected_conditions as EC
 from PIL import Image
 
@@ -25,8 +26,9 @@ class UploadDownload(BasePage):
 
     @allure.step("Checking download")
     def check_download(self, tmpdir):
-        self.waitDonwload.until(lambda driver: any(self.FILE_NAME in f for f in os.listdir(str(tmpdir))))
-        assert os.path.exists(os.path.join(tmpdir, self.FILE_NAME)), "File didn't download"
+        self.waitDonwload\
+            .until(lambda driver: any(self.FILE_NAME in f for f in os.listdir(str(tmpdir))))
+        assert os.path.exists(os.path.join(tmpdir, self.FILE_NAME)), ErrorElements.ERROR_DOWNLOAD
 
     @allure.step("Checking format image")
     def check_format_file(self, tmpdir):
@@ -34,16 +36,17 @@ class UploadDownload(BasePage):
             img = Image.open(os.path.join(tmpdir, self.FILE_NAME))
         else:
             raise FileNotFoundError("File not found at specified path")
-        assert img.format == "JPEG", f'Invalid file format, format:{img.format}'
+        assert img.format == "JPEG", ErrorElements.INVALID_FILE_FORMAT(img.format)
 
     @allure.step("Upload file")
     def upload_file(self, tmpdir):
-        self.wait.until(EC.visibility_of_element_located(self.UPLOAD)).send_keys(os.path.join(tmpdir, self.FILE_NAME))
+        self.wait.until(EC.visibility_of_element_located(self.UPLOAD))\
+            .send_keys(os.path.join(tmpdir, self.FILE_NAME))
 
     @allure.step("Checking upload")
     def check_upload(self):
         result = self.wait.until(EC.visibility_of_element_located(self.UPLOAD_RESULT)).text
-        assert self.FILE_NAME in result, 'File did not upload to the site'
+        assert self.FILE_NAME in result, ErrorElements.ERROR_UPLOAD
 
     @allure.step("Click button download")
     def save_image_directory(self, tmpdir):

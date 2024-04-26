@@ -2,6 +2,7 @@ import allure
 from base.base_page import BasePage
 from config.links import LinkWidgets
 from selenium.webdriver.support import expected_conditions as EC
+from enums.error_enums import ErrorWidgets
 
 
 class Accordian(BasePage):
@@ -62,8 +63,8 @@ class Accordian(BasePage):
         message2 = self.wait.until(EC.visibility_of_element_located(self.MESSAGE_2_2)).text
         self.click_section1()
         self.wait.until(EC.invisibility_of_element_located(self.MESSAGE_2_1))
-        assert message1 == self.TEXT_SECTION_2_1, 'Wrong section opened'
-        assert message2 == self.TEXT_SECTION_2_2, 'Wrong section opened'
+        assert message1 == self.TEXT_SECTION_2_1, ErrorWidgets.ERROR_SECTION_OPENED
+        assert message2 == self.TEXT_SECTION_2_2, ErrorWidgets.ERROR_SECTION_OPENED
 
     @allure.step("Checking accordian section 3")
     def check_accordian_section_3(self):
@@ -71,7 +72,7 @@ class Accordian(BasePage):
         message = self.wait.until(EC.visibility_of_element_located(self.MESSAGE_3)).text
         self.click_section2()
         self.wait.until(EC.invisibility_of_element_located(self.MESSAGE_3))
-        assert message == self.TEXT_SECTION_3, 'Wrong section opened'
+        assert message == self.TEXT_SECTION_3, ErrorWidgets.ERROR_SECTION_OPENED
 
     @allure.step("Checking accordian section 1")
     def check_accordian_section_1(self):
@@ -79,7 +80,7 @@ class Accordian(BasePage):
         message = self.wait.until(EC.visibility_of_element_located(self.MESSAGE_1)).text
         self.click_section3()
         self.wait.until(EC.invisibility_of_element_located(self.MESSAGE_1))
-        assert message == self.TEXT_SECTION_1, 'Wrong section opened'
+        assert message == self.TEXT_SECTION_1, ErrorWidgets.ERROR_SECTION_OPENED
 
 
 

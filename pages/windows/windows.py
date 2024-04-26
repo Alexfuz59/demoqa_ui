@@ -2,6 +2,7 @@ import allure
 from base.base_page import BasePage
 from config.links import LinkWindows
 from selenium.webdriver.support import expected_conditions as EC
+from enums.error_enums import ErrorWindows
 
 
 class Windows(BasePage):
@@ -10,7 +11,7 @@ class Windows(BasePage):
     BUTTON_NEW_WINDOW = ('xpath', '//button[@id="windowButton"]')
     BUTTON_WINDOW_MESSAGE = ('xpath', '//button[@id="messageWindowButton"]')
     TEXT_NEW_TUB = ('xpath', '//h1[@id="sampleHeading"]')
-    MASSAGE_NEW_OBJECT = 'This is a sample page'
+    MESSAGE_NEW_OBJECT = 'This is a sample page'
 
     @allure.step("Click button new tab")
     def click_button_new_tab(self):
@@ -36,8 +37,8 @@ class Windows(BasePage):
         text_new_tub = self.wait.until(EC.visibility_of_element_located(self.TEXT_NEW_TUB)).text
         self.driver.close()
         self.driver.switch_to.window(old_tub)
-        assert old_tub != switch_new_tub, 'New tab did not open'
-        assert text_new_tub == self.MASSAGE_NEW_OBJECT, 'Wrong tab opened'
+        assert old_tub != switch_new_tub, ErrorWindows.ERROR_NEW_TAB
+        assert text_new_tub == self.MESSAGE_NEW_OBJECT, ErrorWindows.ERROR_OPEN_TAB
 
     @allure.step("Checking new window")
     def check_new_window(self):
@@ -51,8 +52,8 @@ class Windows(BasePage):
         text_new_window = self.wait.until(EC.visibility_of_element_located(self.TEXT_NEW_TUB)).text
         self.driver.close()
         self.driver.switch_to.window(old_window)
-        assert old_window != switch_new_window, "New window didn't open"
-        assert text_new_window == self.MASSAGE_NEW_OBJECT, 'Wrong window opened'
+        assert old_window != switch_new_window, ErrorWindows.ERROR_NEW_WINDOW
+        assert text_new_window == self.MESSAGE_NEW_OBJECT, ErrorWindows.ERROR_OPEN_WINDOW
 
     @allure.step("Checking window message")
     def check_window_message(self):
@@ -64,5 +65,5 @@ class Windows(BasePage):
         self.driver.switch_to.window(new_window)
         switch_new_window = self.driver.current_window_handle
         self.driver.close()
-        assert old_window != switch_new_window, 'Wrong message window opened'
+        assert old_window != switch_new_window, ErrorWindows.ERROR_OPEN_WINDOW_MESSAGE
 

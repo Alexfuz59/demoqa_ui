@@ -2,6 +2,7 @@ import allure
 from base.base_page import BasePage
 from config.links import LinkWidgets
 from selenium.webdriver.support import expected_conditions as EC
+from enums.error_enums import ErrorWidgets
 
 
 class ToolTips(BasePage):
@@ -23,7 +24,7 @@ class ToolTips(BasePage):
         text_center = self.wait.until(EC.visibility_of_element_located(self.TEXT_CENTER))
         self.action.move_to_element(text_center).perform()
         self.wait.until(EC.invisibility_of_element_located(self.TOOLTIPS))
-        assert tool_tips_text == self.TOOLTIP_BUTTON, 'Wrong button tooltip'
+        assert tool_tips_text == self.TOOLTIP_BUTTON, ErrorWidgets.ERROR_TOOLTIP
 
     @allure.step("Checking the input tooltip")
     def check_tool_tips_input(self):
@@ -35,5 +36,5 @@ class ToolTips(BasePage):
         text_center = self.wait.until(EC.visibility_of_element_located(self.TEXT_CENTER))
         self.action.move_to_element(text_center).perform()
         self.wait.until(EC.invisibility_of_element_located(self.TOOLTIPS))
-        assert tool_tips_text == self.TOOLTIP_INPUT, 'Wrong input tooltip'
+        assert tool_tips_text == self.TOOLTIP_INPUT, ErrorWidgets.ERROR_TOOLTIP
 

@@ -3,6 +3,7 @@ from base.base_page import BasePage
 from config.links import LinkWidgets
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import Keys
+from enums.error_enums import ErrorWidgets
 
 
 class Slider(BasePage):
@@ -26,8 +27,8 @@ class Slider(BasePage):
         elif value == initial_value:
             pass
         slider_value = self.wait.until(EC.visibility_of_element_located(self.VALUE_SLIDER))
-        assert value == int(slider.get_attribute("value")), 'Wrong slider value'
-        assert value == int(slider_value.get_attribute("value")), 'Wrong slider value'
+        assert value == int(slider.get_attribute("value")), ErrorWidgets.ERROR_SLIDER
+        assert value == int(slider_value.get_attribute("value")), ErrorWidgets.ERROR_SLIDER
 
 
 

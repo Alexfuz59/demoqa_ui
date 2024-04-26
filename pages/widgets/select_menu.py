@@ -4,6 +4,7 @@ from config.links import LinkWidgets
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import Keys
 from selenium.webdriver.support.select import Select
+from enums.error_enums import ErrorWidgets
 
 
 class SelectMenu(BasePage):
@@ -45,13 +46,13 @@ class SelectMenu(BasePage):
             Drop.select_by_visible_text(option.text)
             selected_option = Drop.first_selected_option
             selected_option_text = selected_option.text
-            assert option.text == selected_option_text, f'No value {option.text} in dropdown'
+            assert option.text == selected_option_text, ErrorWidgets.ERROR_VALUE_DROPDOWN(option.text)
 
     @allure.step("Checking len colors in dropdown")
     def check_len_colors_dropdown(self):
         Drop = Select(self.wait.until(EC.visibility_of_element_located(self.COLORS_DROPDOWN)))
         all_oprions = Drop.options
-        assert len(all_oprions) == 11, f'Wrong number of options in dropdown: {len(all_oprions)}'
+        assert len(all_oprions) == 11, ErrorWidgets.ERROR_LEN_DROPDOWN(len(all_oprions))
 
     @allure.step("Selected colors in Multiselect")
     def color_in_multiple(self):
@@ -68,7 +69,7 @@ class SelectMenu(BasePage):
             input.send_keys(color)
             input.send_keys(Keys.ENTER)
             selected_color = self.color_in_multiple()
-            assert color in selected_color, f'Value {color} is not selected in Multiselect'
+            assert color in selected_color, ErrorWidgets.ERROR_MULTISELECT_VALUE(color)
 
     @allure.step("Delete value in Multiselect")
     def delete_selected_multiple(self):
@@ -85,7 +86,7 @@ class SelectMenu(BasePage):
         all_cars = Multiselect.options
         for car in all_cars:
             Multiselect.select_by_visible_text(car.text)
-            assert car.is_selected(), f'Value {car.text} is not selected in Multiselect'
+            assert car.is_selected(), ErrorWidgets.ERROR_MULTISELECT_VALUE(car.text)
 
 
 

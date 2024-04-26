@@ -2,6 +2,7 @@ import re
 import allure
 from base.base_page import BasePage
 from config.links import LinkInteractions
+from enums.error_enums import ErrorInter
 from selenium.webdriver.support import expected_conditions as EC
 
 
@@ -55,28 +56,28 @@ class Droppable(BasePage):
     @allure.step("Checking for successful drag and drop")
     def check_drop(self, drop):
         attribute = drop.get_attribute('class')
-        assert 'ui-state-highlight' in attribute, 'drop from inactive'
-        assert drop.text == "Dropped!", f'Incorrect value in drop: {drop.text}'
+        assert 'ui-state-highlight' in attribute, ErrorInter.ERROR_DROP_INACTIVE
+        assert drop.text == "Dropped!", ErrorInter.ERROR_VALUE_DROP(drop.text)
 
     @allure.step("Checking for failed drag and drop")
     def check_not_drop(self, drop):
         attribute = drop.get_attribute('class')
-        assert not 'ui-state-highlight' in attribute, 'drop from active'
-        assert drop.text == "Drop here", f'Incorrect value in drop: {drop.text}'
+        assert not 'ui-state-highlight' in attribute, ErrorInter.ERROR_DROP_ACTIVE
+        assert drop.text == "Drop here", ErrorInter.ERROR_VALUE_DROP(drop.text)
 
     @allure.step("Checking for successful drag and drop 'greedy'")
     def check_drop_greedy(self, drop, index_status):
         attribute = drop.get_attribute('class')
         text = self.wait.until(EC.visibility_of_element_located(self.STATUS_DROPPED(index_status))).text
-        assert 'ui-state-highlight' in attribute, 'drop from inactive'
-        assert text == "Dropped!", f'Incorrect value in drop: {text}'
+        assert 'ui-state-highlight' in attribute, ErrorInter.ERROR_DROP_INACTIVE
+        assert text == "Dropped!", ErrorInter.ERROR_VALUE_DROP(drop.text)
 
     @allure.step("Checking for failed drag and drop 'greedy'")
     def check_drop_not_greedy(self, drop, index_status):
         attribute = drop.get_attribute('class')
         text = self.wait.until(EC.visibility_of_element_located(self.STATUS_DROPPED(index_status))).text
-        assert not 'ui-state-highlight' in attribute, 'drop from active'
-        assert text == "Outer droppable", f'Incorrect value in drop: {text}'
+        assert not 'ui-state-highlight' in attribute, ErrorInter.ERROR_DROP_ACTIVE
+        assert text == "Outer droppable", ErrorInter.ERROR_VALUE_DROP(text)
 
     @allure.step("Drag and drop accept")
     def drop_object_accept(self):
@@ -126,8 +127,8 @@ class Droppable(BasePage):
         self.check_drop(drop)
         drag_moving_drop = self.wait.until(EC.visibility_of_element_located(self.WILL_REVERT))
         top_after, left_after = self.check_position(drag_moving_drop)
-        assert top_before == top_after, 'Incorrect height when dragging an object with revert'
-        assert left_before == left_after, 'Incorrect width when dragging an object with revert'
+        assert top_before == top_after, ErrorInter.ERROR_HEIGHT_REVERT
+        assert left_before == left_after, ErrorInter.ERROR_WITH_REVERT
 
     @allure.step("Position determination")
     def check_position(self, drag):
@@ -151,8 +152,8 @@ class Droppable(BasePage):
         self.wait.until(EC.presence_of_element_located(self.DROP_ACTIV))
         drag_after = self.wait.until(EC.visibility_of_element_located(self.NOT_REVERT))
         top_after, left_after = self.check_position(drag_after)
-        assert top_before == top_after, 'Incorrect height when dragging an object without revert'
-        assert left_before == left_after, 'Incorrect width when dragging an object without revert'
+        assert top_before == top_after, ErrorInter.ERROR_HEIGHT_REVERT
+        assert left_before == left_after, ErrorInter.ERROR_WITH_REVERT
 
 
 

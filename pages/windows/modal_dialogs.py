@@ -2,6 +2,7 @@ import allure
 from base.base_page import BasePage
 from config.links import LinkWindows
 from selenium.webdriver.support import expected_conditions as EC
+from enums.error_enums import ErrorWindows
 
 
 class ModalDialogs(BasePage):
@@ -34,14 +35,14 @@ class ModalDialogs(BasePage):
         self.wait.until(EC.visibility_of_element_located(self.MODAL))
         message = self.wait.until(EC.visibility_of_element_located(self.MESSAGE_SMALL_MODAL)).text
         self.wait.until(EC.element_to_be_clickable(self.BUTTON_CLOSE_SMALL)).click()
-        assert message == self.TEXT_SMALL_MODAL, 'Invalid message to small modal'
+        assert message == self.TEXT_SMALL_MODAL, ErrorWindows.INVALID_MESSAGE_MODAL
 
     @allure.step("Checking a large modal dialogs")
     def check_large_modal(self):
         self.wait.until(EC.visibility_of_element_located(self.MODAL))
         massage = self.wait.until(EC.visibility_of_element_located(self.MESSAGE_LARGE_MODAL)).text
         self.wait.until(EC.element_to_be_clickable(self.BUTTON_CLOSE_LARGE)).click()
-        assert massage == self.TEXT_LARGE_MODAL, 'Invalid message to large modal'
+        assert massage == self.TEXT_LARGE_MODAL, ErrorWindows.INVALID_MESSAGE_MODAL
 
     @allure.step("Click button close small")
     def click_button_close_small(self):

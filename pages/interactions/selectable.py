@@ -1,6 +1,7 @@
 import allure
 from base.base_page import BasePage
 from config.links import LinkInteractions
+from enums.error_enums import ErrorInter
 from selenium.webdriver.support import expected_conditions as EC
 
 
@@ -25,7 +26,7 @@ class Selectable(BasePage):
         for line in line_list:
             self.driver.execute_script("arguments[0].click();", line)
             attribute = line.get_attribute("class")
-            assert 'active' in attribute, 'Line not selected'
+            assert 'active' in attribute, ErrorInter.ERROR_SELECTED_LINE
 
     @allure.step("Checking selectable grid")
     def check_selectable_grid(self):
@@ -33,4 +34,4 @@ class Selectable(BasePage):
         for cell in line_list:
             self.driver.execute_script("arguments[0].click();", cell)
             attribute = cell.get_attribute("class")
-            assert 'active' in attribute, 'Cell not selected'
+            assert 'active' in attribute, ErrorInter.ERROR_SELECTED_CELL

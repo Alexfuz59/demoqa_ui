@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from faker import Faker
 from selenium.webdriver import Keys
 from datetime import datetime
+from enums.error_enums import ErrorWidgets
 
 fake = Faker()
 
@@ -35,7 +36,7 @@ class DatePicker(BasePage):
         input = self.wait.until(EC.visibility_of_element_located(self.SELECT_DATA))
         data_value = datetime.strptime(input.get_attribute("value"), '%m/%d/%Y')
         value = data_value.strftime('%m.%d.%Y')
-        assert value == self.data, 'Wrong date on the calendar'
+        assert value == self.data, ErrorWidgets.ERROR_DATE
 
     @allure.step("Set data and time in calendar")
     def set_data_time(self):
@@ -54,4 +55,4 @@ class DatePicker(BasePage):
         datatime = date_object.strftime('%B %e, %Y %I:%M %p')
         date_object_value = datetime.strptime(input.get_attribute("value"), '%B %d, %Y %I:%M %p')
         datatime_value = date_object_value.strftime('%B %e, %Y %I:%M %p')
-        assert datatime_value == datatime, 'Wrong date and time on the calendar'
+        assert datatime_value == datatime, ErrorWidgets.ERROR_DATE_TIME

@@ -1,6 +1,7 @@
 import allure
 from base.base_page import BasePage
 from config.links import LinkWindows
+from enums.error_enums import ErrorWindows
 from selenium.webdriver.support import expected_conditions as EC
 
 
@@ -17,7 +18,7 @@ class Frame(BasePage):
         self.driver.switch_to.frame(iframe)
         text = self.wait.until(EC.visibility_of_element_located(self.TEXT_IFRAME1)).text
         self.driver.switch_to.default_content()
-        assert text == self.MESSAGE, 'Invalid message to frame'
+        assert text == self.MESSAGE, ErrorWindows.INVALID_MESSAGE_FRAME
 
     @allure.step("Checking frame 2")
     def check_iframe2(self):
@@ -25,4 +26,4 @@ class Frame(BasePage):
         self.driver.switch_to.frame(iframe)
         text = self.wait.until(EC.visibility_of_element_located(self.TEXT_IFRAME1)).text
         self.driver.switch_to.default_content()
-        assert text == self.MESSAGE, 'Invalid message to frame'
+        assert text == self.MESSAGE, ErrorWindows.INVALID_MESSAGE_FRAME
